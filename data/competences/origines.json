@@ -1,0 +1,53 @@
+[
+  {
+    "id": "dom_langue",
+    "nom": "Langue",
+    "categorie": "Origine",
+    "is_progression_bloquee": false,
+    "specialites": [
+      { "id": "spec_nordique", "nom": "Nordique" },
+      { "id": "spec_colonial", "nom": "Colonial" },
+      { "id": "spec_courtisan", "nom": "Courtisan", "note": "N'existe pas au niveau Rudimentaire" },
+      { "id": "spec_erenien", "nom": "Erenien" },
+      { "id": "spec_jargon_charbon", "nom": "Jargon du Charbon", "note": "Uniquement écrit" },
+      { "id": "spec_haut_elfique", "nom": "Haut Elfique", "note": "N'existe pas au niveau parler" },
+      { "id": "spec_signaux_patrouilles", "nom": "Signaux de patrouilles" },
+      { "id": "spec_danisil", "nom": "Danisil (Voix de la Jungle)" },
+      { "id": "spec_langage_clan", "nom": "Langage de clan" },
+      { "id": "spec_nain_ancien", "nom": "Nain Ancien" },
+      { "id": "spec_langue_commerce", "nom": "Langue du Commerce" },
+      { "id": "spec_halfelin", "nom": "Halfelin" },
+      { "id": "spec_sylvestre", "nom": "Sylvestre" },
+      { "id": "spec_draconien", "nom": "Draconien", "note": "Langue morte" },
+      { "id": "spec_eclipse", "nom": "Eclipse (Abyssal, Aérien, etc.)" },
+      { "id": "spec_orque", "nom": "Orque", "note": "Ne s'écrit pas" },
+      { "id": "spec_noir_parle", "nom": "Noir parlé", "note": "Rudimentaire uniquement, ne s'écrit pas" },
+      { "id": "spec_serviteurs_ombre", "nom": "Serviteurs de l'Ombre (Géant, Gnoll, etc.)", "note": "Ne s'écrit pas" }
+    ]
+  },
+  {
+    "id": "dom_statut",
+    "nom": "Statut",
+    "categorie": "Origine",
+    "is_fixe": true,
+    "specialites": [
+      { "id": "spec_intendance", "nom": "Intendance" },
+      { "id": "spec_bas_fonds", "nom": "Les bas-fonds" },
+      { "id": "spec_paysans", "nom": "Les paysans" },
+      { "id": "spec_bourgeois", "nom": "Les bourgeois" },
+      { "id": "spec_noblesse", "nom": "La noblesse" }
+    ]
+  },
+  {
+    "id": "dom_volonte",
+    "nom": "Volonté",
+    "categorie": "Origine",
+    "specialites": [
+      { "id": "spec_combativite", "nom": "Combativité", "is_defense": true },
+      { "id": "spec_creativite", "nom": "Créativité" },
+      { "id": "spec_indifference", "nom": "Indifférence" },
+      { "id": "spec_raison", "nom": "Raison" },
+      { "id": "spec_ideal", "nom": "Idéal" }
+    ]
+  }
+]
