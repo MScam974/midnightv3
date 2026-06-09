@@ -41,4 +41,3 @@ export function getStatsFinales(basePersonnalite, race, statut) {
     }
     return stats;
 }
-}
