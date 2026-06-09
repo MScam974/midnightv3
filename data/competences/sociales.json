@@ -1,0 +1,46 @@
+[
+  {
+    "id": "dom_representation",
+    "nom": "Représentation",
+    "categorie": "Sociale",
+    "specialites": [
+      { "id": "spec_chant", "nom": "Chant" },
+      { "id": "spec_comedie", "nom": "Comédie" },
+      { "id": "spec_danse", "nom": "Danse" },
+      { "id": "spec_vent", "nom": "Instruments à vent" },
+      { "id": "spec_cordes", "nom": "Instruments à cordes" },
+      { "id": "spec_percussions", "nom": "Percussions" }
+    ]
+  },
+  {
+    "id": "dom_duperie",
+    "nom": "Duperie",
+    "categorie": "Sociale",
+    "specialites": [
+      { "id": "spec_bluff", "nom": "Bluff" },
+      { "id": "spec_deguisement", "nom": "Déguisement" },
+      { "id": "spec_jeu", "nom": "Jeu" }
+    ]
+  },
+  {
+    "id": "dom_presence",
+    "nom": "Présence",
+    "categorie": "Sociale",
+    "specialites": [
+      { "id": "spec_charmer", "nom": "Charmer" },
+      { "id": "spec_autorite", "nom": "Autorité" },
+      { "id": "spec_convaincre", "nom": "Convaincre" },
+      { "id": "spec_negocier", "nom": "Négocier" }
+    ]
+  },
+  {
+    "id": "dom_psychologie",
+    "nom": "Psychologie",
+    "categorie": "Sociale",
+    "specialites": [
+      { "id": "spec_ecoute", "nom": "Écoute" },
+      { "id": "spec_intuition", "nom": "Intuition" },
+      { "id": "spec_hypnose", "nom": "Hypnose" }
+    ]
+  }
+]
