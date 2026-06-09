@@ -1,24 +1,68 @@
-// Moteur de création de personnage
-const personnage = {
-    race: null,
-    personnalite: {}, // { aspect: score }
-    competences: {},
-    traits: {} // Vertus/Vices
+// --- État Global ---
+const char = {
+    step: 0,
+    raceId: null,
+    personnalite: { combativite: 3, creativite: 3, indifference: 3, raison: 3, ideal: 3 },
+    totalPoints: 15
 };
 
-async function initCreateur() {
-    // 1. Charger tous les JSON (c'est le point d'entrée)
-    const [races, personnalite, physique, mentales, sociales, origines] = await Promise.all([
-        fetch('./data/competences/races.json').then(r => r.json()),
-        fetch('./data/competences/personnalite.json').then(r => r.json()),
-        fetch('./data/competences/physiques.json').then(r => r.json()),
-        fetch('./data/competences/mentales.json').then(r => r.json()),
-        fetch('./data/competences/sociales.json').then(r => r.json()),
-        fetch('./data/competences/origines.json').then(r => r.json())
-    ]);
+const steps = [
+    { id: 'race', title: '1. Choix de la Race' },
+    { id: 'personnalite', title: '2. Personnalité (Répartir 15 pts)' }
+];
 
-    console.log("Données chargées, moteur prêt !");
-    // Ici, vous pourriez appeler une fonction qui affiche le sélecteur de Race
+// --- Moteur de Rendu ---
+async function render() {
+    const app = document.getElementById('app');
+    const current = steps[char.step];
+    app.innerHTML = `<h1>${current.title}</h1><div id="content"></div>`;
+
+    if (current.id === 'race') renderRace();
+    if (current.id === 'personnalite') renderPersonnalite();
 }
 
-initCreateur();
+// --- Étape 1 : Race ---
+async function renderRace() {
+    const races = await fetch('./data/competences/races.json').then(r => r.json());
+    const container = document.getElementById('content');
+    
+    races.forEach(r => {
+        const btn = document.createElement('button');
+        btn.innerText = r.nom;
+        btn.onclick = () => { char.raceId = r.id; char.step = 1; render(); };
+        container.appendChild(btn);
+    });
+}
+
+// --- Étape 2 : Personnalité ---
+function renderPersonnalite() {
+    const container = document.getElementById('content');
+    container.innerHTML = `<p>Total points : <span id="total-points">0</span>/15</p>`;
+    
+    for (const [aspect, score] of Object.entries(char.personnalite)) {
+        container.innerHTML += `
+            <div>
+                <label>${aspect.toUpperCase()}</label>
+                <input type="number" class="aspect-input" data-aspect="${aspect}" value="${score}">
+            </div>
+        `;
+    }
+
+    // Calcul en temps réel
+    document.querySelectorAll('.aspect-input').forEach(input => {
+        input.addEventListener('input', (e) => {
+            const aspect = e.target.dataset.aspect;
+            char.personnalite[aspect] = parseInt(e.target.value) || 0;
+            
+            const total = Object.values(char.personnalite).reduce((a, b) => a + b, 0);
+            document.getElementById('total-points').innerText = total;
+            
+            // Logique de validation
+            if (total !== 15) e.target.style.borderColor = "red";
+            else e.target.style.borderColor = "green";
+        });
+    });
+}
+
+// Lancement
+render();
