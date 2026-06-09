@@ -56,7 +56,15 @@ function renderPersonnalite(container, onNext) {
     });
 
     btn.onclick = () => {
-        state.history.push({ title: "Personnalité", value: "Validée" });
+        // --- CORRECTION ICI ---
+        // On construit un résumé lisible de la personnalité
+        const resume = Object.entries(state.personnalite)
+            .map(([aspect, score]) => `${aspect}: ${score}`)
+            .join(', ');
+        
+        state.history.push({ title: "Personnalité", value: resume });
+        // ----------------------
+        
         onNext();
     };
 }

@@ -6,7 +6,8 @@
     "bonus_domaine": { "endurance": 1 },
     "langues_base": ["nordique", "erenien"],
     "capacites": ["artisan_ne", "heritage_dorn"],
-    "statut_max": 5
+    "statut_max": 5,
+    "historiques": ["Maison rebelle", "Mercenaire", "Maison éteinte"]
   },
   {
     "id": "race_sarke",
@@ -15,7 +16,8 @@
     "bonus_domaine": { "persuasion": 1 },
     "langues_base": ["colonial", "courtisan", "erenien"],
     "capacites": ["artisan_ne", "armes_familiere_sarke"],
-    "statut_max": 5
+    "statut_max": 5,
+    "historiques": ["Nomade", "Urbain"]
   },
   {
     "id": "race_erenien",
@@ -33,6 +35,7 @@
     "bonus_domaine": { "perception": 1 },
     "langues_base": ["elfique"],
     "capacites": ["vision_nocturne", "art_des_carinsils", "magie_innee"],
-    "statut_max": 5
+    "statut_max": 5,
+    "historiques": ["Aucun"]
   }
 ]

@@ -1,0 +1,29 @@
+{
+  "dorn": {
+    "1d": { "nom": "Reclu", "points_repartir": 5, "specs": ["duperie", "endurance", "larcin", "perception", "volonte"], "bonus_caractere": 0 },
+    "2d": { "nom": "Theign", "points_repartir": 4, "specs": ["corps_a_corps", "tir_lancer", "atletisme", "endurance", "volonte"], "bonus_caractere": 0 },
+    "3d": { "nom": "Hirde", "points_repartir": 3, "specs": ["corps_a_corps", "tir_lancer", "milieu_naturel", "artisanat", "duperie", "persuasion", "langue"], "bonus_caractere": 0 },
+    "4d": { "nom": "Mhor", "points_repartir": 2, "specs": ["art_militaire", "corps_a_corps", "duperie", "persuasion", "erudition", "langue", "milieu_naturel", "tir_lancer"], "bonus_caractere": 0 },
+    "5d": { "nom": "Dhrot", "points_repartir": 1, "specs": "toutes", "bonus_caractere": 1 }
+  },
+  "sarke": {
+    "1d": { "nom": "Sheol", "points_repartir": 5, "specs": ["duperie", "endurance", "larcin", "perception", "volonte"], "bonus_caractere": 0 },
+    "2d": { "nom": "Asara", "points_repartir": 3, "specs": ["duperie", "endurance", "larcin", "perception", "volonte"], "bonus_caractere": 0 },
+    "3d": { "nom": "Beeshi", "points_repartir": 3, "specs": ["corps_a_corps", "tir_lancer", "milieu_naturel"], "bonus_caractere": 0 },
+    "4d": { "nom": "Uruush", "points_repartir": 2, "specs": ["art_militaire", "corps_a_corps", "duperie", "persuasion", "erudition", "langue", "milieu_naturel", "tir_lancer"], "bonus_caractere": 0 },
+    "5d": { "nom": "Sharu", "points_repartir": 1, "specs": "toutes", "bonus_caractere": 1 }
+  },
+  "erenien": {
+    "1d": { "nom": "Vaurien", "points_repartir": 5, "specs": "toutes", "bonus_caractere": 0 },
+    "2d": { "nom": "Gens du peuple", "points_repartir": 4, "specs": "toutes", "bonus_caractere": 0 },
+    "3d": { "nom": "Homme libre", "points_repartir": 3, "specs": "toutes", "bonus_caractere": 0 },
+    "4d": { "nom": "Noble", "points_repartir": 2, "specs": "toutes", "bonus_caractere": 0 },
+    "5d": { "nom": "Seigneur", "points_repartir": 1, "specs": "toutes", "bonus_caractere": 1 }
+  },
+  "carinsil": {
+    "2d": { "nom": "Aventurier", "points_repartir": 4, "specs": ["corps_a_corps", "tir_lancer", "atletisme", "endurance", "volonte"], "bonus_caractere": 0 },
+    "3d": { "nom": "Citadin", "points_repartir": 3, "specs": ["artisanat", "atletisme", "corps_a_corps", "tir_lancer", "milieu_naturel", "representation", "discretion"], "bonus_caractere": 0 },
+    "4d": { "nom": "Notable", "points_repartir": 2, "specs": ["artisanat", "atletisme", "corps_a_corps", "tir_lancer", "milieu_naturel", "representation", "discretion"], "bonus_caractere": 0 },
+    "5d": { "nom": "Seigneur", "points_repartir": 1, "specs": ["artisanat", "atletisme", "corps_a_corps", "tir_lancer", "milieu_naturel", "representation", "discretion", "statut"], "bonus_caractere": 1 }
+  }
+}
