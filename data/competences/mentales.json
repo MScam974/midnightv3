@@ -1,0 +1,68 @@
+[
+  {
+    "id": "dom_ingeniosite",
+    "nom": "Ingéniosité",
+    "categorie": "Mentales",
+    "specialites": [
+      { "id": "spec_debrouillardise", "nom": "Débrouillardise" },
+      { "id": "spec_intellect", "nom": "Intellect" },
+      { "id": "spec_sabotage", "nom": "Sabotage" },
+      { "id": "spec_siege", "nom": "Siège" }
+    ]
+  },
+  {
+    "id": "dom_perception",
+    "nom": "Perception",
+    "categorie": "Mentales",
+    "specialites": [
+      { "id": "spec_lecture_levres", "nom": "Lecture sur les lèvres" },
+      { "id": "spec_vigilance", "nom": "Vigilance" },
+      { "id": "spec_fouille", "nom": "Fouille" }
+    ]
+  },
+  {
+    "id": "dom_artisanat",
+    "nom": "Artisanat",
+    "categorie": "Mentales",
+    "specialites": [
+      { "id": "spec_armes", "nom": "Armes" },
+      { "id": "spec_armures", "nom": "Armures" },
+      { "id": "spec_arcs_fleches", "nom": "Arcs et flèches" },
+      { "id": "spec_fetiches", "nom": "Fétiches" }
+    ]
+  },
+  {
+    "id": "dom_erudition",
+    "nom": "Érudition",
+    "categorie": "Mentales",
+    "specialites": [
+      { "id": "spec_alchimie", "nom": "Alchimie" },
+      { "id": "spec_astronomie", "nom": "Astronomie" },
+      { "id": "spec_temple", "nom": "Le Temple" },
+      { "id": "spec_geographie", "nom": "Géographie" },
+      { "id": "spec_histoire", "nom": "Histoire" },
+      { "id": "spec_mysteres", "nom": "Mystères" }
+    ]
+  },
+  {
+    "id": "dom_milieu_naturel",
+    "nom": "Milieu naturel",
+    "categorie": "Mentales",
+    "specialites": [
+      { "id": "spec_chasse", "nom": "Chasse" },
+      { "id": "spec_equitation", "nom": "Équitation" },
+      { "id": "spec_faune_flore", "nom": "Faune et flore" },
+      { "id": "spec_dressage", "nom": "Dressage" }
+    ]
+  },
+  {
+    "id": "dom_medecine",
+    "nom": "Médecine",
+    "categorie": "Mentales",
+    "specialites": [
+      { "id": "spec_diagnostics", "nom": "Diagnostics" },
+      { "id": "spec_soins", "nom": "Soins" },
+      { "id": "spec_herboristerie", "nom": "Herboristerie" }
+    ]
+  }
+]
