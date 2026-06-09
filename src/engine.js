@@ -1,21 +1,30 @@
 // --- État Global ---
-const char = {
+const state = {
     step: 0,
-    raceId: null,
+    history: [], // Stocke les résumés des étapes validées
+    race: null,
     personnalite: { combativite: 3, creativite: 3, indifference: 3, raison: 3, ideal: 3 },
-    totalPoints: 15
 };
 
 const steps = [
     { id: 'race', title: '1. Choix de la Race' },
-    { id: 'personnalite', title: '2. Personnalité (Répartir 15 pts)' }
+    { id: 'personnalite', title: '2. Personnalité (Répartir 15 pts)' },
+    { id: 'origine', title: '3. Origine (Langues & Statut)' }
 ];
 
 // --- Moteur de Rendu ---
 async function render() {
     const app = document.getElementById('app');
-    const current = steps[char.step];
-    app.innerHTML = `<h1>${current.title}</h1><div id="content"></div>`;
+    app.innerHTML = ""; // Nettoie tout
+
+    // 1. Afficher les étapes validées (Historique)
+    state.history.forEach(h => {
+        app.innerHTML += `<div class="summary">✅ ${h.title} : <strong>${h.value}</strong></div>`;
+    });
+
+    // 2. Afficher l'étape en cours
+    const current = steps[state.step];
+    app.innerHTML += `<h1>${current.title}</h1><div id="content"></div>`;
 
     if (current.id === 'race') renderRace();
     if (current.id === 'personnalite') renderPersonnalite();
@@ -29,7 +38,12 @@ async function renderRace() {
     races.forEach(r => {
         const btn = document.createElement('button');
         btn.innerText = r.nom;
-        btn.onclick = () => { char.raceId = r.id; char.step = 1; render(); };
+        btn.onclick = () => {
+            state.race = r.nom;
+            state.history.push({ title: "Race", value: r.nom });
+            state.step++;
+            render();
+        };
         container.appendChild(btn);
     });
 }
@@ -37,32 +51,33 @@ async function renderRace() {
 // --- Étape 2 : Personnalité ---
 function renderPersonnalite() {
     const container = document.getElementById('content');
-    container.innerHTML = `<p>Total points : <span id="total-points">0</span>/15</p>`;
+    container.innerHTML = `<p>Total points : <span id="total-points">15</span>/15</p>`;
     
-    for (const [aspect, score] of Object.entries(char.personnalite)) {
-        container.innerHTML += `
-            <div>
-                <label>${aspect.toUpperCase()}</label>
-                <input type="number" class="aspect-input" data-aspect="${aspect}" value="${score}">
-            </div>
-        `;
+    // Création des inputs
+    for (const [aspect, score] of Object.entries(state.personnalite)) {
+        container.innerHTML += `<div><label>${aspect}</label> 
+            <input type="number" class="aspect-input" data-aspect="${aspect}" value="${score}"></div>`;
     }
 
-    // Calcul en temps réel
+    container.innerHTML += `<button id="btn-lock" disabled>Verrouiller l'étape</button>`;
+
+    // Logique temps réel
     document.querySelectorAll('.aspect-input').forEach(input => {
         input.addEventListener('input', (e) => {
-            const aspect = e.target.dataset.aspect;
-            char.personnalite[aspect] = parseInt(e.target.value) || 0;
-            
-            const total = Object.values(char.personnalite).reduce((a, b) => a + b, 0);
+            state.personnalite[e.target.dataset.aspect] = parseInt(e.target.value) || 0;
+            const total = Object.values(state.personnalite).reduce((a, b) => a + b, 0);
             document.getElementById('total-points').innerText = total;
-            
-            // Logique de validation
-            if (total !== 15) e.target.style.borderColor = "red";
-            else e.target.style.borderColor = "green";
+            document.getElementById('btn-lock').disabled = (total !== 15);
         });
     });
+
+    // Bouton Valider
+    document.getElementById('btn-lock').onclick = () => {
+        state.history.push({ title: "Personnalité", value: "Validée (15 pts)" });
+        state.step++;
+        render();
+    };
 }
 
-// Lancement
+// --- Lancement ---
 render();

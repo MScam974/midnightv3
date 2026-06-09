@@ -1,0 +1,8 @@
+.summary {
+    background: #e0f7fa;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+#app { font-family: sans-serif; padding: 20px; }
+button { margin: 5px; padding: 10px; cursor: pointer; }
+input { width: 50px; }
