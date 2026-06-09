@@ -1,5 +1,5 @@
 import { state } from './state.js';
-import { calculerTotalPoints, getStatsAvecBonus } from './logic.js';
+import { calculerTotalPoints, getStatsFinales } from './logic.js';
 
 export function renderStep(container, title, contentHtml, onLock) {
     container.innerHTML = `<h1>${title}</h1>` + contentHtml;
@@ -18,10 +18,10 @@ export async function renderRace(container, onNext) {
     races.forEach(r => {
         container.querySelector(`#${r.id}`).onclick = () => {
             state.race = r;
-            // Gestion des choix de bonus si le JSON contient "bonus_possible"
+            // Gestion des bonus au choix (ex: Erenien/Dorn)
             if (r.bonus_possible) {
-                const choix = prompt(`Choisissez votre bonus (+1) parmi : ${r.bonus_possible.join(', ')}`);
-                state.race.modificateurs = { [choix]: 1 };
+                const choix = prompt(`Choisissez votre trait (+1) : ${r.bonus_possible.join(', ')}`);
+                state.race.modificateurs = { ...r.modificateurs, [choix]: 1 };
             }
             state.history.push({ title: "Race", value: r.nom });
             onNext();
@@ -31,7 +31,7 @@ export async function renderRace(container, onNext) {
 
 export async function renderStatut(container, onNext) {
     const statuts = await fetch('./data/regles/statuts.json').then(r => r.json());
-    const raceKey = state.race.nom.toLowerCase().split(' ')[0]; // Nettoyage clé
+    const raceKey = state.race.nom.toLowerCase().split(' ')[0];
     const options = statuts[raceKey] || {};
     
     let html = `<p>Choisissez votre statut :</p>`;
@@ -50,18 +50,21 @@ export async function renderStatut(container, onNext) {
 }
 
 export function renderPersonnalite(container, onNext) {
-    const scores = getStatsAvecBonus(state.personnalite, state.race, state.statut);
-    const total = calculerTotalPoints(scores);
+    const totalBase = calculerTotalPoints(state.personnalite);
+    const scoresFinaux = getStatsFinales(state.personnalite, state.race, state.statut);
     const maxVal = (state.statut && state.statut.bonus_caractere > 0) ? 6 : 5;
     
-    let html = `<p>Répartir 15 pts (Max par spé : ${maxVal}) :</p>
-                <p>Total : <span id="total-points">${total}</span>/15</p>`;
+    let html = `<p>Répartir 15 pts (Max base : 5 par spé) :</p>
+                <p>Total points de création : <span id="total-points">${totalBase}</span>/15</p>`;
     
-    for (const [aspect, score] of Object.entries(scores)) {
-        html += `<div><label>${aspect} (Base: ${state.personnalite[aspect]} + Bonus: ${scores[aspect] - state.personnalite[aspect]})</label> 
-            <input type="number" class="aspect-input" data-aspect="${aspect}" value="${state.personnalite[aspect]}"></div>`;
+    for (const [aspect, scoreBase] of Object.entries(state.personnalite)) {
+        const bonus = scoresFinaux[aspect] - scoreBase;
+        html += `<div>
+            <label>${aspect} (Base: ${scoreBase} + Bonus: ${bonus} = <strong>${scoresFinaux[aspect]}</strong>)</label> 
+            <input type="number" class="aspect-input" data-aspect="${aspect}" value="${scoreBase}" min="0" max="5">
+        </div>`;
     }
-    html += `<button id="btn-lock" ${total !== 15 ? 'disabled' : ''}>Valider</button>`;
+    html += `<button id="btn-lock" ${totalBase !== 15 ? 'disabled' : ''}>Valider</button>`;
     
     renderStep(container, "3. Caractère", html, () => {
         state.history.push({ title: "Caractère", value: "Validé" });
@@ -70,17 +73,20 @@ export function renderPersonnalite(container, onNext) {
 
     container.querySelectorAll('.aspect-input').forEach(input => {
         input.addEventListener('input', (e) => {
-            state.personnalite[e.target.dataset.aspect] = parseInt(e.target.value) || 0;
-            const s = getStatsAvecBonus(state.personnalite, state.race, state.statut);
-            document.getElementById('total-points').innerText = calculerTotalPoints(s);
-            document.getElementById('btn-lock').disabled = (calculerTotalPoints(s) !== 15);
+            let val = parseInt(e.target.value) || 0;
+            if (val > 5) { val = 5; e.target.value = 5; } // Sécurité plafond 5
+            
+            state.personnalite[e.target.dataset.aspect] = val;
+            const t = calculerTotalPoints(state.personnalite);
+            document.getElementById('total-points').innerText = t;
+            document.getElementById('btn-lock').disabled = (t !== 15);
         });
     });
 }
 
 export async function renderTraits(container, onNext) {
     const data = await fetch('./data/regles/personnalite.json').then(r => r.json());
-    const scores = getStatsAvecBonus(state.personnalite, state.race, state.statut);
+    const scores = getStatsFinales(state.personnalite, state.race, state.statut);
     
     let html = `<table border="1" style="width:100%; border-collapse:collapse;">
         <tr><th>Vices</th><th>Trait (Score)</th><th>Vertus</th></tr>`;

@@ -21,4 +21,24 @@ export function getStatsAvecBonus(basePersonnalite, race, statut) {
     }
     
     return stats;
+
+
+    export function calculerTotalPoints(personnalite) {
+    return Object.values(personnalite).reduce((a, b) => a + b, 0);
+}
+
+// On ne calcule plus les bonus dans le total de création, 
+// les bonus sont des "ajouts" après coup.
+export function getStatsFinales(basePersonnalite, race, statut) {
+    let stats = { ...basePersonnalite };
+    if (race && race.modificateurs) {
+        for (const [trait, mod] of Object.entries(race.modificateurs)) {
+            stats[trait] += mod;
+        }
+    }
+    if (statut && statut.bonus_caractere > 0) {
+        stats.ideal += 1; // À remplacer par une sélection dynamique plus tard
+    }
+    return stats;
+}
 }
