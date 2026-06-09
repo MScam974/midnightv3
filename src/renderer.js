@@ -1,7 +1,6 @@
 import { state } from './state.js';
-import { calculerTotalPoints } from './logic.js';
+import { calculerTotalPoints, getStatsAvecBonus } from './logic.js';
 
-// Fonction utilitaire pour le verrouillage et le rendu global
 export function renderStep(container, title, contentHtml, onLock) {
     container.innerHTML = `<h1>${title}</h1>` + contentHtml;
     const btn = container.querySelector('#btn-lock');
@@ -9,17 +8,12 @@ export function renderStep(container, title, contentHtml, onLock) {
 }
 
 export async function renderRace(container, onNext) {
-    const response = await fetch('./data/competences/races.json');
-    const races = await response.json();
-    
+    const races = await fetch('./data/races/races.json').then(r => r.json());
     let html = "<div>";
-    races.forEach(r => {
-        html += `<button id="${r.id}" style="margin:5px;">${r.nom}</button>`;
-    });
+    races.forEach(r => { html += `<button id="${r.id}" style="margin:5px;">${r.nom}</button>`; });
     html += "</div>";
     
     renderStep(container, "1. Choix de la Race", html, null);
-    
     races.forEach(r => {
         container.querySelector(`#${r.id}`).onclick = () => {
             state.race = r;
@@ -30,10 +24,8 @@ export async function renderRace(container, onNext) {
 }
 
 export async function renderStatut(container, onNext) {
-    const response = await fetch('./data/regles/statuts.json');
-    const statuts = await response.json();
-    const raceKey = state.race.nom.toLowerCase(); 
-    const options = statuts[raceKey] || {};
+    const statuts = await fetch('./data/regles/statuts.json').then(r => r.json());
+    const options = statuts[state.race.nom.toLowerCase()] || {};
     
     let html = `<p>Choisissez votre statut :</p>`;
     for (const [code, data] of Object.entries(options)) {
@@ -41,79 +33,60 @@ export async function renderStatut(container, onNext) {
     }
     
     renderStep(container, "2. Statut Social", html, null);
-    
     container.querySelectorAll('.statut-btn').forEach(btn => {
         btn.onclick = () => {
-            const code = btn.dataset.code;
-            state.statut = { code, ...options[code] };
-            if (options[code].bonus_caractere > 0) state.maxCaractere = 6;
-            
-            state.history.push({ title: "Statut", value: options[code].nom });
+            state.statut = { code: btn.dataset.code, ...options[btn.dataset.code] };
+            state.history.push({ title: "Statut", value: state.statut.nom });
             onNext();
         };
     });
 }
 
 export function renderPersonnalite(container, onNext) {
-    const total = calculerTotalPoints(state.personnalite);
-    let html = `<p>Répartir 15 pts (max ${state.maxCaractere || 5} par spé) :</p>
+    // Calcul des scores réels avec bonus race/statut
+    const scores = getStatsAvecBonus(state.personnalite, state.race, state.statut);
+    const total = calculerTotalPoints(scores);
+    
+    let html = `<p>Répartir 15 pts (Max par spé : ${state.statut.bonus_caractere ? 6 : 5}) :</p>
                 <p>Total : <span id="total-points">${total}</span>/15</p>`;
     
-    for (const [aspect, score] of Object.entries(state.personnalite)) {
+    for (const [aspect, score] of Object.entries(scores)) {
         html += `<div><label>${aspect}</label> 
             <input type="number" class="aspect-input" data-aspect="${aspect}" value="${score}"></div>`;
     }
     html += `<button id="btn-lock" ${total !== 15 ? 'disabled' : ''}>Valider</button>`;
     
     renderStep(container, "3. Caractère", html, () => {
-        const resume = Object.entries(state.personnalite).map(([a, s]) => `${a}:${s}`).join(', ');
-        state.history.push({ title: "Caractère", value: resume });
+        state.history.push({ title: "Caractère", value: "Validé" });
         onNext();
-    });
-
-    container.querySelectorAll('.aspect-input').forEach(input => {
-        input.addEventListener('input', (e) => {
-            state.personnalite[e.target.dataset.aspect] = parseInt(e.target.value) || 0;
-            const t = calculerTotalPoints(state.personnalite);
-            document.getElementById('total-points').innerText = t;
-            document.getElementById('btn-lock').disabled = (t !== 15);
-        });
     });
 }
 
 export async function renderTraits(container, onNext) {
-    try {
-        const response = await fetch('./data/regles/personnalite.json');
-        
-        if (!response.ok) {
-            throw new Error(`Fichier introuvable (Status: ${response.status})`);
+    const data = await fetch('./data/regles/personnalite.json').then(r => r.json());
+    const scores = getStatsAvecBonus(state.personnalite, state.race, state.statut);
+    
+    let html = `<table border="1" style="width:100%; border-collapse:collapse;">
+        <tr><th>Vices</th><th>Trait</th><th>Vertus</th></tr>`;
+    
+    for (const [aspect, score] of Object.entries(scores)) {
+        if (score >= 4 || score <= 2) {
+            const type = (score >= 4) ? "majeur" : "mineur";
+            html += `<tr>
+                <td><select class="trait-select" data-type="vice" data-aspect="${aspect}">
+                    <option value="">--</option>${data.aspects[aspect][type].vices.map(v => `<option value="${v}">${v}</option>`).join('')}
+                </select></td>
+                <td><strong>${aspect} (${score})</strong></td>
+                <td><select class="trait-select" data-type="vertu" data-aspect="${aspect}">
+                    <option value="">--</option>${data.aspects[aspect][type].vertus.map(v => `<option value="${v}">${v}</option>`).join('')}
+                </select></td>
+            </tr>`;
         }
-        
-        const data = await response.json();
-        let html = `<p>Choisir vos Vertus/Vices :</p>`;
-        
-        for (const [aspect, score] of Object.entries(state.personnalite)) {
-            if (score >= 4 || score <= 2) {
-                const type = (score >= 4) ? "majeur" : "mineur";
-                html += `<div><h3>${aspect} (${type})</h3>
-                    <select class="trait-select" data-aspect="${aspect}">
-                        <option value="">Choisir...</option>
-                        ${data.aspects[aspect][type].vertus.map(v => `<option value="${v}">Vertu : ${v}</option>`).join('')}
-                        ${data.aspects[aspect][type].vices.map(v => `<option value="${v}">Vice : ${v}</option>`).join('')}
-                    </select></div>`;
-            }
-        }
-        html += `<br><button id="btn-lock">Terminer</button>`;
-        
-        renderStep(container, "4. Vices et Vertus", html, () => {
-            const selected = Array.from(container.querySelectorAll('.trait-select')).map(s => s.value);
-            state.history.push({ title: "Traits", value: selected.join(', ') });
-            onNext();
-        });
-
-    } catch (e) {
-        console.error("Erreur dans renderTraits :", e);
-        container.innerHTML = `<h1>Erreur</h1><p style="color:red">Impossible de charger 'personnalite.json'. Vérifiez que le fichier est bien présent dans <code>data/regles/</code>.</p>
-        <button onclick="location.reload()">Réessayer</button>`;
     }
+    html += `</table><br><button id="btn-lock">Terminer</button>`;
+    
+    renderStep(container, "4. Vices et Vertus", html, () => {
+        state.history.push({ title: "Traits", value: "Validés" });
+        onNext();
+    });
 }
