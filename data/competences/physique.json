@@ -1,0 +1,69 @@
+[
+  {
+    "id": "dom_agilite",
+    "nom": "Agilité",
+    "categorie": "Physique",
+    "specialites": [
+      { "id": "spec_reflexes", "nom": "Réflexes", "is_defense": true },
+      { "id": "spec_acrobaties", "nom": "Acrobaties" },
+      { "id": "spec_contorsions", "nom": "Contorsions" }
+    ]
+  },
+  {
+    "id": "dom_atletisme",
+    "nom": "Athlétisme",
+    "categorie": "Physique",
+    "specialites": [
+      { "id": "spec_force", "nom": "Force", "is_defense": true },
+      { "id": "spec_course", "nom": "Course" },
+      { "id": "spec_escalade", "nom": "Escalade" },
+      { "id": "spec_natation", "nom": "Natation" }
+    ]
+  },
+  {
+    "id": "dom_endurance",
+    "nom": "Endurance",
+    "categorie": "Physique",
+    "specialites": [
+      { "id": "spec_sante", "nom": "Santé", "is_defense": true },
+      { "id": "spec_vigueur", "nom": "Vigueur", "is_defense": true },
+      { "id": "spec_recuperation", "nom": "Récupération" }
+    ]
+  },
+  {
+    "id": "dom_discretion",
+    "nom": "Discrétion",
+    "categorie": "Physique",
+    "specialites": [
+      { "id": "spec_furtif", "nom": "Furtif" },
+      { "id": "spec_mimetisme", "nom": "Mimétisme" },
+      { "id": "spec_larcin", "nom": "Vol à la tire" }
+    ]
+  },
+  {
+    "id": "dom_cac",
+    "nom": "Corps à corps",
+    "categorie": "Physique",
+    "specialites": [
+      { "id": "spec_hast", "nom": "Armes d'hast" },
+      { "id": "spec_boucliers", "nom": "Boucliers" },
+      { "id": "spec_casse_tete", "nom": "Casse-têtes" },
+      { "id": "spec_cavalerie", "nom": "Cavalerie" },
+      { "id": "spec_escrime", "nom": "Escrime" },
+      { "id": "spec_fleau", "nom": "Fléau" },
+      { "id": "spec_lames_courtes", "nom": "Lames courtes" },
+      { "id": "spec_lames_longues", "nom": "Lames longues" },
+      { "id": "spec_masse", "nom": "Masse" }
+    ]
+  },
+  {
+    "id": "dom_tir",
+    "nom": "Tir et lancer",
+    "categorie": "Physique",
+    "specialites": [
+      { "id": "spec_jets", "nom": "Armes de jets" },
+      { "id": "spec_arcs", "nom": "Arcs" },
+      { "id": "spec_arbaletes", "nom": "Arbalètes" }
+    ]
+  }
+]
