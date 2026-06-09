@@ -18,9 +18,9 @@ export async function renderRace(container, onNext) {
     races.forEach(r => {
         container.querySelector(`#${r.id}`).onclick = () => {
             state.race = r;
-            // SI C'EST UN CHOIX : on ouvre une petite fenêtre de sélection
-            if (r.id === 'race_erenien') {
-                const choix = prompt("Choisissez votre trait (+1) : combativite, creativite, indifference, raison ou ideal");
+            // Gestion des choix de bonus si le JSON contient "bonus_possible"
+            if (r.bonus_possible) {
+                const choix = prompt(`Choisissez votre bonus (+1) parmi : ${r.bonus_possible.join(', ')}`);
                 state.race.modificateurs = { [choix]: 1 };
             }
             state.history.push({ title: "Race", value: r.nom });
@@ -31,7 +31,7 @@ export async function renderRace(container, onNext) {
 
 export async function renderStatut(container, onNext) {
     const statuts = await fetch('./data/regles/statuts.json').then(r => r.json());
-    const raceKey = state.race.nom.toLowerCase(); 
+    const raceKey = state.race.nom.toLowerCase().split(' ')[0]; // Nettoyage clé
     const options = statuts[raceKey] || {};
     
     let html = `<p>Choisissez votre statut :</p>`;
@@ -50,7 +50,6 @@ export async function renderStatut(container, onNext) {
 }
 
 export function renderPersonnalite(container, onNext) {
-    // getStatsAvecBonus s'occupe désormais d'appliquer les modificateurs du JSON
     const scores = getStatsAvecBonus(state.personnalite, state.race, state.statut);
     const total = calculerTotalPoints(scores);
     const maxVal = (state.statut && state.statut.bonus_caractere > 0) ? 6 : 5;
@@ -59,7 +58,6 @@ export function renderPersonnalite(container, onNext) {
                 <p>Total : <span id="total-points">${total}</span>/15</p>`;
     
     for (const [aspect, score] of Object.entries(scores)) {
-        // Affichage du score calculé
         html += `<div><label>${aspect} (Base: ${state.personnalite[aspect]} + Bonus: ${scores[aspect] - state.personnalite[aspect]})</label> 
             <input type="number" class="aspect-input" data-aspect="${aspect}" value="${state.personnalite[aspect]}"></div>`;
     }
@@ -75,6 +73,7 @@ export function renderPersonnalite(container, onNext) {
             state.personnalite[e.target.dataset.aspect] = parseInt(e.target.value) || 0;
             const s = getStatsAvecBonus(state.personnalite, state.race, state.statut);
             document.getElementById('total-points').innerText = calculerTotalPoints(s);
+            document.getElementById('btn-lock').disabled = (calculerTotalPoints(s) !== 15);
         });
     });
 }

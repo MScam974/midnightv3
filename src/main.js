@@ -11,6 +11,9 @@ export function goToStep(stepIndex) {
     update();
 }
 
+// On expose la fonction à l'objet global window pour les boutons HTML
+window.goToStep = goToStep;
+
 export function update() {
     const app = document.getElementById('app');
     app.innerHTML = ""; 
@@ -21,6 +24,7 @@ export function update() {
         hDiv.className = "history-container";
         state.history.forEach((h, index) => {
             const div = document.createElement('div');
+            // Utilisation de la fonction globale goToStep via window
             div.innerHTML = `✅ ${h.title}: <strong>${h.value}</strong> 
                              <button onclick="window.goToStep(${index})">Modifier</button>`;
             hDiv.appendChild(div);
@@ -28,19 +32,22 @@ export function update() {
         app.appendChild(hDiv);
     }
 
+    // Affichage de l'étape en cours
     if (state.step < steps.length) {
         const stepDiv = document.createElement('div');
+        stepDiv.id = "step-content";
         app.appendChild(stepDiv);
+        
+        // Exécution de l'étape actuelle
         steps[state.step](stepDiv, () => {
             state.step++;
             update();
         });
     } else {
         app.innerHTML += "<h1>Personnage terminé !</h1>";
+        app.innerHTML += `<button onclick="location.reload()">Recommencer</button>`;
     }
 }
 
-// Rendre la fonction accessible globalement pour le bouton "Modifier"
-window.goToStep = goToStep;
-
+// Premier lancement
 update();
