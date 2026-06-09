@@ -117,4 +117,3 @@ export async function renderTraits(container, onNext) {
         <button onclick="location.reload()">Réessayer</button>`;
     }
 }
-}
