@@ -1,0 +1,59 @@
+{
+  "aspects": {
+    "combativite": {
+      "nom": "Combativité",
+      "majeur": {
+        "vertus": ["combatif", "optimiste", "dynamique", "courageux", "pugnace", "vaillant"],
+        "vices": ["impulsif", "outrecuidant", "fier", "buté", "orgueilleux", "vaniteux"]
+      },
+      "mineur": {
+        "vertus": ["calme", "flegmatique", "paisible", "pondéré", "réfléchi", "imperturbable"],
+        "vices": ["pessimiste", "mou", "triste", "faible", "peureux", "lâche"]
+      }
+    },
+    "creativite": {
+      "nom": "Créativité",
+      "majeur": {
+        "vertus": ["inventif", "original", "débrouillard", "drôle", "poète", "visionnaire"],
+        "vices": ["anticonformiste", "rebelle", "indiscipliné", "excentrique", "menteur", "instable"]
+      },
+      "mineur": {
+        "vertus": ["respectueux", "discipliné", "méthodique", "rigoureux", "traditionnel", "ordonné"],
+        "vices": ["empoté", "esprit étriqué", "ascétique", "rigide", "manquant d'imagination", "scolaire"]
+      }
+    },
+    "indifference": {
+      "nom": "Indifférence",
+      "majeur": {
+        "vertus": ["contrôlé", "stoïque", "calme", "impassible", "neutre", "stable"],
+        "vices": ["austère", "insensible", "renfermé", "taciturne", "froid", "individualiste"]
+      },
+      "mineur": {
+        "vertus": ["réceptif", "sensible", "intuitif", "extraverti", "empathique", "ouvert"],
+        "vices": ["émotif", "influençable", "bavard", "instable", "anxieux", "passionné"]
+      }
+    },
+    "raison": {
+      "nom": "Raison",
+      "majeur": {
+        "vertus": ["réfléchi", "ingénieux", "prudent", "logique", "concentré", "analytique"],
+        "vices": ["abstrait", "replié", "précautionneux", "hésitant", "froid", "cérébral"]
+      },
+      "mineur": {
+        "vertus": ["spontané", "téméraire", "instinctif", "vivace", "rapide", "audacieux"],
+        "vices": ["distrait", "imprudent", "irréfléchi", "inconsistant", "fougueux", "frivole"]
+      }
+    },
+    "ideal": {
+      "nom": "Idéal",
+      "majeur": {
+        "vertus": ["droit", "persévérant", "loyal", "incorruptible", "généreux", "altruiste"],
+        "vices": ["rigide", "intolérant", "fanatique", "dogmatique", "sectaire", "aveugle"]
+      },
+      "mineur": {
+        "vertus": ["libre", "indépendant", "autonome", "non-conformiste", "affranchi", "ouvert"],
+        "vices": ["capricieux", "inconstant", "inconséquent", "immoral", "douteux", "traître"]
+      }
+    }
+  }
+}
