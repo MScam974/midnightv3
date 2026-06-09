@@ -1,15 +1,24 @@
 import { state } from './state.js';
 import { renderPersonnalite } from './renderer.js';
 
-function initApp() {
+function init() {
     const app = document.getElementById('app');
     
-    // Exemple : Lancer l'étape Personnalité
-    // On définit ce qui se passe quand on verrouille
-    renderPersonnalite(app, () => {
-        alert("Étape validée !");
-        console.log("État final :", state);
-    });
+    function navigate() {
+        if (state.step === 0) {
+            // Logique Race ici...
+            state.step = 1; // On passe à personnalité pour le test
+        }
+        
+        if (state.step === 1) {
+            renderPersonnalite(app, () => {
+                state.history.push({ title: "Personnalité", value: "Validée" });
+                state.step++;
+                navigate();
+            });
+        }
+    }
+    navigate();
 }
 
-initApp();
+init();
