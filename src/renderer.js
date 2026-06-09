@@ -82,25 +82,39 @@ export function renderPersonnalite(container, onNext) {
 }
 
 export async function renderTraits(container, onNext) {
-    const data = await fetch('./data/regles/personnalite.json').then(r => r.json());
-    let html = `<p>Choisir vos Vertus/Vices :</p>`;
-    
-    for (const [aspect, score] of Object.entries(state.personnalite)) {
-        if (score >= 4 || score <= 2) {
-            const type = (score >= 4) ? "majeur" : "mineur";
-            html += `<div><h3>${aspect} (${type})</h3>
-                <select class="trait-select" data-aspect="${aspect}">
-                    <option value="">Choisir...</option>
-                    ${data.aspects[aspect][type].vertus.map(v => `<option value="${v}">Vertu : ${v}</option>`).join('')}
-                    ${data.aspects[aspect][type].vices.map(v => `<option value="${v}">Vice : ${v}</option>`).join('')}
-                </select></div>`;
+    try {
+        const response = await fetch('./data/regles/personnalite.json');
+        
+        if (!response.ok) {
+            throw new Error(`Fichier introuvable (Status: ${response.status})`);
         }
+        
+        const data = await response.json();
+        let html = `<p>Choisir vos Vertus/Vices :</p>`;
+        
+        for (const [aspect, score] of Object.entries(state.personnalite)) {
+            if (score >= 4 || score <= 2) {
+                const type = (score >= 4) ? "majeur" : "mineur";
+                html += `<div><h3>${aspect} (${type})</h3>
+                    <select class="trait-select" data-aspect="${aspect}">
+                        <option value="">Choisir...</option>
+                        ${data.aspects[aspect][type].vertus.map(v => `<option value="${v}">Vertu : ${v}</option>`).join('')}
+                        ${data.aspects[aspect][type].vices.map(v => `<option value="${v}">Vice : ${v}</option>`).join('')}
+                    </select></div>`;
+            }
+        }
+        html += `<br><button id="btn-lock">Terminer</button>`;
+        
+        renderStep(container, "4. Vices et Vertus", html, () => {
+            const selected = Array.from(container.querySelectorAll('.trait-select')).map(s => s.value);
+            state.history.push({ title: "Traits", value: selected.join(', ') });
+            onNext();
+        });
+
+    } catch (e) {
+        console.error("Erreur dans renderTraits :", e);
+        container.innerHTML = `<h1>Erreur</h1><p style="color:red">Impossible de charger 'personnalite.json'. Vérifiez que le fichier est bien présent dans <code>data/regles/</code>.</p>
+        <button onclick="location.reload()">Réessayer</button>`;
     }
-    html += `<button id="btn-lock">Terminer</button>`;
-    
-    renderStep(container, "4. Vices et Vertus", html, () => {
-        const selected = Array.from(container.querySelectorAll('.trait-select')).map(s => s.value);
-        state.history.push({ title: "Traits", value: selected.join(', ') });
-        onNext();
-    });
+}
 }
