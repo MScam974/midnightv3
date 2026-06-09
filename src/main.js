@@ -5,9 +5,8 @@ const steps = [renderRace, renderStatut, renderPersonnalite, renderTraits];
 
 function update() {
     const app = document.getElementById('app');
-    app.innerHTML = ""; // Nettoyage total
+    app.innerHTML = ""; 
     
-    // Affichage historique
     if (state.history.length > 0) {
         const hDiv = document.createElement('div');
         hDiv.className = "history-container";
@@ -15,7 +14,6 @@ function update() {
         app.appendChild(hDiv);
     }
 
-    // Affichage étape
     if (state.step < steps.length) {
         const stepDiv = document.createElement('div');
         app.appendChild(stepDiv);

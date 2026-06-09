@@ -25,7 +25,8 @@ export async function renderRace(container, onNext) {
 
 export async function renderStatut(container, onNext) {
     const statuts = await fetch('./data/regles/statuts.json').then(r => r.json());
-    const options = statuts[state.race.nom.toLowerCase()] || {};
+    const raceKey = state.race.nom.toLowerCase(); 
+    const options = statuts[raceKey] || {};
     
     let html = `<p>Choisissez votre statut :</p>`;
     for (const [code, data] of Object.entries(options)) {
@@ -43,12 +44,12 @@ export async function renderStatut(container, onNext) {
 }
 
 export function renderPersonnalite(container, onNext) {
-    // Calcul des scores réels avec bonus race/statut
     const scores = getStatsAvecBonus(state.personnalite, state.race, state.statut);
     const total = calculerTotalPoints(scores);
+    const maxVal = (state.statut && state.statut.bonus_caractere > 0) ? 6 : 5;
     
-    let html = `<p>Répartir 15 pts (Max par spé : ${state.statut.bonus_caractere ? 6 : 5}) :</p>
-                <p>Total : <span id="total-points">${total}</span>/15</p>`;
+    let html = `<p>Répartir 15 pts (Max par spé : ${maxVal}) :</p>
+                <p>Total (avec bonus) : <span id="total-points">${total}</span>/15</p>`;
     
     for (const [aspect, score] of Object.entries(scores)) {
         html += `<div><label>${aspect}</label> 
@@ -60,6 +61,14 @@ export function renderPersonnalite(container, onNext) {
         state.history.push({ title: "Caractère", value: "Validé" });
         onNext();
     });
+
+    container.querySelectorAll('.aspect-input').forEach(input => {
+        input.addEventListener('input', (e) => {
+            state.personnalite[e.target.dataset.aspect] = parseInt(e.target.value) || 0;
+            const updatedScores = getStatsAvecBonus(state.personnalite, state.race, state.statut);
+            document.getElementById('total-points').innerText = calculerTotalPoints(updatedScores);
+        });
+    });
 }
 
 export async function renderTraits(container, onNext) {
@@ -67,7 +76,7 @@ export async function renderTraits(container, onNext) {
     const scores = getStatsAvecBonus(state.personnalite, state.race, state.statut);
     
     let html = `<table border="1" style="width:100%; border-collapse:collapse;">
-        <tr><th>Vices</th><th>Trait</th><th>Vertus</th></tr>`;
+        <tr><th>Vices</th><th>Trait (Score)</th><th>Vertus</th></tr>`;
     
     for (const [aspect, score] of Object.entries(scores)) {
         if (score >= 4 || score <= 2) {
