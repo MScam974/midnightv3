@@ -1,70 +1,63 @@
 import { state } from './state.js';
 import { calculerTotalPoints } from './logic.js';
 
-export function renderApp(container, onNext) {
-    container.innerHTML = "";
-    
-    // 1. Afficher l'historique validé
-    state.history.forEach(h => {
-        container.innerHTML += `<div class="summary">✅ ${h.title} : <strong>${h.value}</strong></div>`;
-    });
-
-    // 2. Rendu de l'étape active
-    if (state.step === 0) renderRace(container, onNext);
-    else if (state.step === 1) renderPersonnalite(container, onNext);
-    // Ajoutez ici les autres étapes (renderTraits, etc.)
+// Fonction utilitaire pour le verrouillage
+export function renderStep(container, title, contentHtml, onLock) {
+    container.innerHTML = `<h1>${title}</h1>` + contentHtml;
+    const btn = container.querySelector('#btn-lock');
+    if (btn) btn.onclick = onLock;
 }
 
-async function renderRace(container, onNext) {
-    const response = await fetch('./data/competences/races.json');
-    const races = await response.json();
-    
-    container.innerHTML += `<h1>1. Choix de la Race</h1>`;
+export async function renderRace(container, onNext) {
+    const races = await fetch('./data/competences/races.json').then(r => r.json());
+    let html = "";
     races.forEach(r => {
-        const btn = document.createElement('button');
-        btn.innerText = r.nom;
-        btn.onclick = () => {
+        html += `<button id="${r.id}">${r.nom}</button>`;
+    });
+    
+    renderStep(container, "1. Choix de la Race", html, null);
+    
+    races.forEach(r => {
+        container.querySelector(`#${r.id}`).onclick = () => {
             state.race = r;
             state.history.push({ title: "Race", value: r.nom });
             onNext();
         };
-        container.appendChild(btn);
     });
 }
 
-function renderPersonnalite(container, onNext) {
-    container.innerHTML += `<h1>2. Personnalité</h1>
-        <p>Total : <span id="total-points">${calculerTotalPoints(state.personnalite)}</span>/15</p>`;
+export async function renderStatut(container, onNext) {
+    const statuts = await fetch('./data/regles/statuts.json').then(r => r.json());
+    const raceKey = state.race.nom.toLowerCase(); // ex: 'dorn'
+    const options = statuts[raceKey];
     
-    for (const [aspect, score] of Object.entries(state.personnalite)) {
-        container.innerHTML += `<div><label>${aspect}</label> 
-            <input type="number" class="aspect-input" data-aspect="${aspect}" value="${score}"></div>`;
+    let html = `<p>Choisissez votre statut :</p>`;
+    for (const [code, data] of Object.entries(options)) {
+        html += `<button class="statut-btn" data-code="${code}">${data.nom} (${code})</button>`;
     }
-    const btn = document.createElement('button');
-    btn.id = "btn-lock";
-    btn.innerText = "Valider";
-    btn.disabled = calculerTotalPoints(state.personnalite) !== 15;
-    container.appendChild(btn);
-
-    container.querySelectorAll('.aspect-input').forEach(input => {
-        input.addEventListener('input', (e) => {
-            state.personnalite[e.target.dataset.aspect] = parseInt(e.target.value) || 0;
-            const t = calculerTotalPoints(state.personnalite);
-            document.getElementById('total-points').innerText = t;
-            document.getElementById('btn-lock').disabled = (t !== 15);
-        });
+    
+    renderStep(container, "2. Statut Social", html, null);
+    
+    container.querySelectorAll('.statut-btn').forEach(btn => {
+        btn.onclick = () => {
+            const code = btn.dataset.code;
+            state.statut = { code, ...options[code] };
+            // Si bonus caractère (rang 5d), on augmente la limite globale
+            if (options[code].bonus_caractere > 0) state.maxCaractere = 6;
+            
+            state.history.push({ title: "Statut", value: options[code].nom });
+            onNext();
+        };
     });
+}
 
-    btn.onclick = () => {
-        // --- CORRECTION ICI ---
-        // On construit un résumé lisible de la personnalité
-        const resume = Object.entries(state.personnalite)
-            .map(([aspect, score]) => `${aspect}: ${score}`)
-            .join(', ');
-        
-        state.history.push({ title: "Personnalité", value: resume });
-        // ----------------------
-        
-        onNext();
-    };
+export function renderPersonnalite(container, onNext) {
+    let html = `<p>Répartir 15 pts (max ${state.maxCaractere || 5} par spé) :</p>`;
+    // ... votre code existant pour les inputs ...
+    renderStep(container, "3. Caractère", html + `<button id="btn-lock">Suivant</button>`, onNext);
+}
+
+export function renderTraits(container, onNext) {
+    let html = `<p>Choisir vos Vertus/Vices...</p>`;
+    renderStep(container, "4. Vices et Vertus", html + `<button id="btn-lock">Terminer</button>`, onNext);
 }
