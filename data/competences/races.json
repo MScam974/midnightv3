@@ -1,0 +1,38 @@
+[
+  {
+    "id": "race_dorn",
+    "nom": "Dorn",
+    "modificateurs": { "combativite": 1, "ideal": 1 },
+    "bonus_domaine": { "endurance": 1 },
+    "langues_base": ["nordique", "erenien"],
+    "capacites": ["artisan_ne", "heritage_dorn"],
+    "statut_max": 5
+  },
+  {
+    "id": "race_sarke",
+    "nom": "Sarke",
+    "modificateurs": { "raison": 1, "ideal": 1 },
+    "bonus_domaine": { "persuasion": 1 },
+    "langues_base": ["colonial", "courtisan", "erenien"],
+    "capacites": ["artisan_ne", "armes_familiere_sarke"],
+    "statut_max": 5
+  },
+  {
+    "id": "race_erenien",
+    "nom": "Erenien",
+    "modificateurs": { "choix_trait": 1 },
+    "bonus_domaine": { "choix_domaine": 1 },
+    "langues_base": ["erenien"],
+    "capacites": ["artisan_ne", "adaptabilite_humaine"],
+    "statut_max": 5
+  },
+  {
+    "id": "race_carinsil",
+    "nom": "Carinsil (Elfe des bois)",
+    "modificateurs": { "combativite": -1, "raison": 1, "ideal": 1 },
+    "bonus_domaine": { "perception": 1 },
+    "langues_base": ["elfique"],
+    "capacites": ["vision_nocturne", "art_des_carinsils", "magie_innee"],
+    "statut_max": 5
+  }
+]
