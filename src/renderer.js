@@ -14,9 +14,15 @@ export async function renderRace(container, onNext) {
     html += "</div>";
     
     renderStep(container, "1. Choix de la Race", html, null);
+    
     races.forEach(r => {
         container.querySelector(`#${r.id}`).onclick = () => {
             state.race = r;
+            // SI C'EST UN CHOIX : on ouvre une petite fenêtre de sélection
+            if (r.id === 'race_erenien') {
+                const choix = prompt("Choisissez votre trait (+1) : combativite, creativite, indifference, raison ou ideal");
+                state.race.modificateurs = { [choix]: 1 };
+            }
             state.history.push({ title: "Race", value: r.nom });
             onNext();
         };
@@ -44,16 +50,18 @@ export async function renderStatut(container, onNext) {
 }
 
 export function renderPersonnalite(container, onNext) {
+    // getStatsAvecBonus s'occupe désormais d'appliquer les modificateurs du JSON
     const scores = getStatsAvecBonus(state.personnalite, state.race, state.statut);
     const total = calculerTotalPoints(scores);
     const maxVal = (state.statut && state.statut.bonus_caractere > 0) ? 6 : 5;
     
     let html = `<p>Répartir 15 pts (Max par spé : ${maxVal}) :</p>
-                <p>Total (avec bonus) : <span id="total-points">${total}</span>/15</p>`;
+                <p>Total : <span id="total-points">${total}</span>/15</p>`;
     
     for (const [aspect, score] of Object.entries(scores)) {
-        html += `<div><label>${aspect}</label> 
-            <input type="number" class="aspect-input" data-aspect="${aspect}" value="${score}"></div>`;
+        // Affichage du score calculé
+        html += `<div><label>${aspect} (Base: ${state.personnalite[aspect]} + Bonus: ${scores[aspect] - state.personnalite[aspect]})</label> 
+            <input type="number" class="aspect-input" data-aspect="${aspect}" value="${state.personnalite[aspect]}"></div>`;
     }
     html += `<button id="btn-lock" ${total !== 15 ? 'disabled' : ''}>Valider</button>`;
     
@@ -65,8 +73,8 @@ export function renderPersonnalite(container, onNext) {
     container.querySelectorAll('.aspect-input').forEach(input => {
         input.addEventListener('input', (e) => {
             state.personnalite[e.target.dataset.aspect] = parseInt(e.target.value) || 0;
-            const updatedScores = getStatsAvecBonus(state.personnalite, state.race, state.statut);
-            document.getElementById('total-points').innerText = calculerTotalPoints(updatedScores);
+            const s = getStatsAvecBonus(state.personnalite, state.race, state.statut);
+            document.getElementById('total-points').innerText = calculerTotalPoints(s);
         });
     });
 }

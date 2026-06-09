@@ -5,20 +5,20 @@ export function calculerTotalPoints(personnalite) {
 export function getStatsAvecBonus(basePersonnalite, race, statut) {
     let stats = { ...basePersonnalite };
     
-    // Bonus Race
-    if (race && race.bonus_caractere) {
-        if (stats.hasOwnProperty(race.bonus_caractere)) {
-            stats[race.bonus_caractere] += 1;
+    // Application automatique des modificateurs de la race
+    if (race && race.modificateurs) {
+        for (const [trait, mod] of Object.entries(race.modificateurs)) {
+            if (trait !== "choix_trait") {
+                stats[trait] = (stats[trait] || 0) + mod;
+            }
         }
     }
     
-    // Bonus Statut
+    // Bonus Statut (Logique : si bonus, on ajoute +1 à l'aspect de son choix)
     if (statut && statut.bonus_caractere > 0) {
-        // NOTE: Ici, si le statut donne un bonus, il faudra idéalement 
-        // laisser le joueur choisir l'aspect. Pour l'instant on garde votre logique.
-        if (stats.hasOwnProperty('ideal')) {
-            stats.ideal += 1;
-        }
+        // Pour l'instant, on augmente l'aspect choisi via prompt ou par défaut
+        stats.ideal = (stats.ideal || 0) + 1; 
     }
+    
     return stats;
 }
