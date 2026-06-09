@@ -1,24 +1,11 @@
 import { state } from './state.js';
-import { renderPersonnalite } from './renderer.js';
+import { renderApp } from './renderer.js';
 
-function init() {
-    const app = document.getElementById('app');
-    
-    function navigate() {
-        if (state.step === 0) {
-            // Logique Race ici...
-            state.step = 1; // On passe à personnalité pour le test
-        }
-        
-        if (state.step === 1) {
-            renderPersonnalite(app, () => {
-                state.history.push({ title: "Personnalité", value: "Validée" });
-                state.step++;
-                navigate();
-            });
-        }
-    }
-    navigate();
+function update() {
+    renderApp(document.getElementById('app'), () => {
+        state.step++; // Passage à l'étape suivante
+        update();     // Rendu de la nouvelle étape
+    });
 }
 
-init();
+update();
